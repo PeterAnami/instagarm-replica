@@ -23,5 +23,4 @@ urlpatterns = [
   re_path(r'^unfollow/(?P<user_id>\d+)$',app_views.unfollow,name='unfollow'),
   re_path(r'^delete/(?P<photo_id>\d+)$',app_views.delete,name='delete'),
 
-
 ]

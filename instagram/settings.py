@@ -28,9 +28,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-n6lx8jlc$^s+x)diij1t9rh+6-+5pkhbz3@ff_6wa2j4r$cw6a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False)
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
-API_KEY=config('API_KEY')
+DEBUG = True
 
 
 # Application definition

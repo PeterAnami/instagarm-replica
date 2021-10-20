@@ -1,94 +1,128 @@
+{% extends "base.html" %}
 {% load bootstrap3 %}
-{% load static %}
-{% load cloudinary %}
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="icon" href="https://res.cloudinary.com/dbos9xidr/image/upload/v1625817525/parrot-PROFILE_oldbvn.jpg">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> {% if title %}
-  <title>{{title}}</title>
-  {% else %}
-  <title>Instagram |Clone </title>
-  {% endif %}
-
-  {% block styles %}
-  {% bootstrap_css %}
-  <link rel="stylesheet" href="{% static 'css/index.css' %}">
-  {% endblock styles %}
-</head>
-
-<body>
-  <div class="container-fluid">
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-          <a class="navbar-brand" href="">
-            <p style="color: #4888BE;font-size:50px;"><i class="fa fa-instagram"  aria-hidden="true"></i> Instagram</p>
-          </a>
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-            data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-        </div>
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <div class="col-sm-6 col-md-6">
-                {% if user.is_authenticated %}
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle btn btn-default" style="color: #4888BE;" data-toggle="dropdown" role="button"
-                aria-expanded="false">Account
-                <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu" role="menu">
-                <li>
-                  <a href="{% url 'profile'%}">Profile</a>
-                </li>
-                <li>
-                  <a href="{% url 'post'%}">Post</a>
-                </li>
-                <li>
-                  <a href="/accounts/password/change">Change Password</a>
-                </li>
-                <li>
-                  <a href="/logout">Logout</a>
-                </li>
-              </ul>
-            </li>
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-4">
+          {% if user.profile.profile_photo.url %}
+          <img src="{{user.profile.profile_photo.url}}" alt="{{user.profile_photo.url}}" style="height: 20vh; width:20vh; border-radius:50%"
+            class="rounded-circle account-img">
             {% else %}
-            <li>
-              <a class='btn btn-default' style="color: #4888BE;" href="{% url 'register' %}">Sigup</a>
-            </li>
-            <li>
-              <a class='btn btn-default' style="color: #4888BE; margin-left:5px" href="{% url 'login' %}">Login</a>
-            </li>
-
+            <i style="font-size:100px;color:#4888BE" class="fa fa-user" aria-hidden="true"></i>
             {% endif %}
         </div>
-        </li>
-        </ul>
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-4">
+              <p class="">{{user.username}}</p>
+            </div>
+            <div class="col-md-4">
+              <p><a href="{% url 'update_profile' %}">
+                <button class="btn btn-info ml-4 pl-3">Update</button>
+              </a></p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+          <p class="">{{user_photos|length}} posts</p>
+            </div>
+            <div class="col-md-4">
+              <p class="">{{user.profile.saved_followers}} followers</p>
+            </div>
+            <div class="col-md-4">
+              <p class="">{{user.profile.saved_following}} following</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <p class="">{{user.profile.bio}}</p>
+        </div>
       </div>
+      <hr style="height: 2px; background-color:gray">
 
+    </div>
+
+    <div class="col-md-3"></div>
   </div>
-  {% block content %}
-  {% endblock content %}
-
-  {% block scripts %}
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-  {% bootstrap_javascript %}
-  <script src="../static/js/script.js"></script>
-  {% endblock scripts %}
-</body>
-
-</html>
+  <div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-4">
+      {% if photos %}
+      {% for photo in photos %}
+      <div class="profile">
+        <div class="row">
+          <div class="col-md-2">
+            {% if photo.user.profile.profile_photo.url %}
+            <p><a href="{% url 'users_profile' photo.user.id %}"><img class="profile_photo"
+                  src="{{ photo.user.profile.profile_photo.url }}" alt="{{ photo.profile.name }}"></p>
+                  {% else %}
+                  <i style="font-size:100px;color:#4888BE" class="fa fa-user" aria-hidden="true"></i>
+                  {% endif %}
+          </div>
+          <div class="col-md-2">
+            <p class="username" style="margin-top: 5px;">{{ photo.user.username }}</p>
+          </div>
+        </div>
+        </a>
+      </div>
+      <div class="card-header">
+        <a href="{% url 'photo.detail' photo.id %}" class="open-project"><img src="{{photo.photo.url}}" alt="" class="img-thumbnail"></a>
+      </div>
+      <div class="card-body">
+        <div>
+          <a href=" {% url 'like' image_id=photo.id %}">
+            <i class="fa fa-heart-o fa-3x text-success" aria-hidden="true"></i></a>
+          <p><strong class="ml-3 photo_likes">{{photo.saved_likes}} </strong>
+            <strong>Likes</strong>
+          </p>
+        </div>
+        <div>
+          <p class=""><strong>{{photo.name}}</strong> {{photo.caption}}</p>
+        </div>
+        {% for comment in photo.saved_comments %}
+        <p class="ml-3"><span class="font-weight-bold text-success">{{comment.user.username}}</span>:
+          {{comment.comment}}</p>
+        {% endfor %}
+        <form action="{% url 'commentFunction' photo_id=photo.id %}" method="post">
+          {% csrf_token %}
+          {% bootstrap_form comment_form %}
+          <input type="submit" class="btn btn-success btn-lg" style="margin-bottom: 10px;" value="Comment">
+        </form>
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+    <div class="col-md-2">
+      <div class="">
+        <h2>People</h2>
+      </div>
+      <div class="">
+        {% if all_users %}
+        {% for person in all_users %}
+        <div class="row">
+          <div class="col-md-4">
+            {% if person.profile.profile_photo.url %}
+            <p><a href="{% url 'users_profile' person.id  %}"><img src="{{person.profile.profile_photo.url}}"
+                  class="rounded-circle border" alt="profile" style="height: 8vh; width:8vh; border-radius:50%"></a></p>
+                  {% else %}
+                  <i style="font-size:100px;color:#4888BE" class="fa fa-user" aria-hidden="true"></i>
+                  {% endif %}
+          </div>
+          <div class="col-md-4">
+            <p></p><a href="{% url 'users_profile' person.id   %}">
+              <p class="text-primary">{{person.username}}</p>
+              </p>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-3"></div>
+  </div>
+</div>
+{% endblock %}

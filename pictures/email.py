@@ -1,7 +1,7 @@
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
-def send_welcome_email (name,receiver):
+def send_welcome_email(name,receiver):
   subject = 'Welcome'
   sender = 'platnumzpeter4@gmail.com'
   text_content = render_to_string('email/welcome.txt',{"name":name})
